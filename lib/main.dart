@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
         appBar: AppBar(
+          // const는 한 번 붙이면 변환되지 않기 때문에. 나중에 rebuild가 되지 않아 앱의 성능이 향상된다.
           title: const Text('계좌정보 확인하기'),
           centerTitle: true,
         ),
@@ -55,7 +56,9 @@ class MyApp extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
+              // 데이터를 받기 전 Indicator가 돈다.
               return CircularProgressIndicator();
+
             },
           ),
         ),
@@ -66,7 +69,7 @@ class MyApp extends StatelessWidget {
 
 Future<Info> fetchInfo() async {
   final response =
-      await http.get('https://my.api.mockaroo.com/bank.json?key=fea24270');
+      await http.get(Uri.parse('https://my.api.mockaroo.com/bank.json?key=fea24270'));
 
   if (response.statusCode == 200) {
     return Info.fromJson(json.decode(response.body));
